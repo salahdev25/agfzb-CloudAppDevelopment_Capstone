@@ -1,18 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Dealership Review</title>
-    {% load static %}
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-</head>
+{% extends 'djangoapp/base.html' %}
 
-    <body>
+{% load static %}
 
-    <!--Add a nav bar here -->
-
+{% block content %}
     <!-- Add reviews as cards -->
-
-    </body>
-
-</html>
+    {% if not reviews %}
+    <div>
+      <h3>There is no review for this dealership</h3>
+    </div>
+    {% else %}
+        <div class="p-3 card-columns">
+            {% for review in reviews %}
+                <div class="card">
+                    {% if review.sentiment == 'positive' %}
+                    <img class="card-img-top" src="{{MEDIA_URL}}/emoji/positive.png" alt="review sentiment image" />
+                    {% elif review.sentiment == 'negative' %}
+                    <img class="card-img-left" src="{{MEDIA_URL}}/emoji/negative.png" alt="review sentiment image" />
+                    {% elif review.sentiment == 'neutral' %}
+                    <img class="card-img-left" src="{{MEDIA_URL}}/emoji/neutral.png" alt="review sentiment image" />
+                    {% endif %}
+                    <div class="card-body">
+                        {% if review.purchase %}
+                        <h5 class="card-title">{{review.car_make}}, {{review.car_model}}</h5>
+                        <p class="card-text">{{review.car_year}}</p>
+                        <p class="card-text">{{review.review}}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+  {% endblock %}
